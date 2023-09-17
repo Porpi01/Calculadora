@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="calculadora.css" />
+    <script src="jquery.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="estilo.css" />
+  </head>
+
+  <body>
+    <table class="calculadora">
+      <tr>
+        <td colspan="4"><span id="resultado" disabled></span></td>
+      </tr>
+      <tr>
+        <td><button id="numero7">7</button></td>
+        <td><button id="numero8">8</button></td>
+        <td><button id="numero9">9</button></td>
+        <td><button id="sumar">+</button></td>
+      </tr>
+      <tr>
+        <td><button id="numero4">4</button></td>
+        <td><button id="numero5">5</button></td>
+        <td><button id="numero6">6</button></td>
+        <td><button id="restar">-</button></td>
+      </tr>
+
+      <tr>
+        <td><button id="numero1">1</button></td>
+        <td><button id="numero2">2</button></td>
+        <td><button id="numero3">3</button></td>
+        <td><button id="multiplicar">*</button></td>
+      </tr>
+
+      <tr>
+        <td><button id="numero0">0</button></td>
+        <td><button id="limpiar">C</button></td>
+        <td><button id="igual">=</button></td>
+        <td><button id="dividir">/</button></td>
+      </tr>
+    </table>
+    <script>
+      //Funciones
+
+      $(document).ready(function () {
+        let numero1 = "";
+        let numero2 = "";
+        let operador = "";
+
+        function resetear() {
+          $("#resultado").html("");
+          numero1 = 0;
+          numero2 = 0;
+          operador = "";
+        }
+
+        function limpiar() {
+          $("#resultado").html("");
+        }
+
+        $("#numero0").click(function () {
+          $("#resultado").append("0");
+        });
+        $("#numero1").click(function () {
+          $("#resultado").append("1");
+        });
+
+        $("#numero2").click(function () {
+          $("#resultado").append("2");
+        });
+
+        $("#numero3").click(function () {
+          $("#resultado").append("3");
+        });
+
+        $("#numero4").click(function () {
+          $("#resultado").append("4");
+        });
+
+        $("#numero5").click(function () {
+          $("#resultado").append("5");
+        });
+        $("#numero6").click(function () {
+          $("#resultado").append("6");
+        });
+
+        $("#numero7").click(function () {
+          $("#resultado").append("7");
+        });
+
+        $("#numero8").click(function () {
+          $("#resultado").append("8");
+        });
+
+        $("#numero9").click(function () {
+          $("#resultado").append("9");
+        });
+
+        $("#limpiar").click(function () {
+          resetear();
+        });
+
+        $("#sumar").click(function () {
+          numero1 = $("#resultado").html();
+          $("#resultado").append("+");
+          operador = "+";
+          limpiar();
+        });
+
+        $("#restar").click(function () {
+          numero1 = $("#resultado").html();
+          $("#resultado").append("-");
+          operador = "-";
+          limpiar();
+        });
+
+        $("#dividir").click(function () {
+          numero1 = $("#resultado").html();
+          $("#resultado").append("/");
+          operador = "/";
+          limpiar();
+        });
+
+        $("#multiplicar").click(function () {
+          numero1 = $("#resultado").html();
+          $("#resultado").append("*");
+          operador = "*";
+          limpiar();
+        });
+
+        $("#igual").click(function () {
+          numero2 = $("#resultado").html();
+          let resultadoFinal = 0;
+
+          switch (operador) {
+            case "+":
+              resultadoFinal = parseFloat(numero1) + parseFloat(numero2);
+              break;
+
+            case "-":
+              resultadoFinal = parseFloat(numero1) - parseFloat(numero2);
+              break;
+
+            case "*":
+              resultadoFinal = parseFloat(numero1) * parseFloat(numero2);
+              break;
+
+            case "/":
+              resultadoFinal = parseFloat(numero1) / parseFloat(numero2);
+              break;
+          }
+          limpiar();
+          $("#resultado").append(resultadoFinal);
+        });
+      });
+    </script>
+  </body>
+</html>
