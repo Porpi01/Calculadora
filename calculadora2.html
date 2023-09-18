@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calculadora</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header bg-primary text-white ">
+                <h5>CALCULADORA</h5>
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered calculadora">
+                  <tr>
+                    <td colspan="3">
+                      <input type="text" id="resultado" class="form-control" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <button type="button" class="btn btn-danger" id="limpiar">C</button>
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn-primary" id="igual">=</button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  <script>
+    $(document).ready(function () {
+      const igual = $("#igual");
+      $("#resultado").keyup(function () {
+        let valor = $(this).val();
+        let expresionRegular = /^[0-9+\-*/]+$/;
+        if (expresionRegular.test(valor)) {
+          $(this).css("color", "black");
+          igual.prop("disabled", false);
+        } else {
+          $(this).css("color", "red");
+          igual.prop("disabled", true); //La función .prop() en jQuery se utiliza para obtener o establecer propiedades de elementos DOM.
+        }
+      });
+
+      $("#igual").click(function () {
+        let entrada = $('#resultado').val();
+        let resultadoFinal;
+        try {
+            resultadoFinal = eval(entrada);
+          $("#resultado").val(resultadoFinal);
+        } catch (error) {
+          $("#resultado").val('Error');
+        }
+      });
+
+      $("#limpiar").click(function () {
+        $("#resultado").val('');
+        igual.prop("disabled", true);
+      });
+    });
+  </script>
+</body>
+</html>
