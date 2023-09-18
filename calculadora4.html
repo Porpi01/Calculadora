@@ -1,72 +1,89 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Calculadora</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</head>
-<body>
+  <head>
+    <title>Calculadora</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </head>
+  <body>
     <div class="container mt-5">
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header bg-primary text-white ">
-                <h5>CALCULADORA</h5>
-              </div>
-              <div class="card-body">
-                <table class="table table-bordered calculadora">
-                  <tr>
-                    <td colspan="2">
-                      <input type="text" id="resultado" class="form-control" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <button type="button" class="btn btn-danger btn-block" id="limpiar">C</button>
-                    </td>
-                    <td>
-                      <button type="button" class="btn btn-primary btn-block" id="igual">=</button>
-                    </td>
-                  </tr>
-                </table>
-              </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header bg-success text-white">
+              <h5>CALCULADORA</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered calculadora">
+                <tr>
+                  <td colspan="2">
+                    <input type="text" id="resultado" class="form-control" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-secondary btn-block"
+                      id="limpiar"
+                    >
+                      C
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-success btn-block"
+                      id="igual"
+                    >
+                      =
+                    </button>
+                  </td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
       </div>
-  <script>
-    $(document).ready(function () {
-      const igual = $("#igual");
-      $("#resultado").keyup(function () {
-        let valor = $(this).val();
-        let expresionRegular = /^[0-9+\-*/]+$/;
-        if (expresionRegular.test(valor)) {
-          $(this).css("color", "black");
-          igual.prop("disabled", false);
-        } else {
-          $(this).css("color", "red");
-          igual.prop("disabled", true); //La función .prop() en jQuery se utiliza para obtener o establecer propiedades de elementos DOM.
-        }
-      });
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let botonIgual = document.getElementById("igual");
+        let resultado = document.getElementById("resultado");
+        let botonLimpiar = document.getElementById("limpiar");
 
-      $("#igual").click(function () {
-        let entrada = $('#resultado').val();
-        let resultadoFinal;
-        try {
+        resultado.addEventListener("keyup",function () {
+          let valor = resultado.value;
+          let expresionRegular = /^[0-9+\-*/]+$/;
+          if (expresionRegular.test(valor)) {
+            resultado.classList.remove("is-invalid");
+            resultado.classList.add("is-valid");
+            botonIgual.disabled = false;
+          } else {
+            resultado.classList.remove("is-valid");
+            resultado.classList.add("is-invalid");
+            botonIgual.disabled = true;
+          }
+        });
+
+       botonIgual.addEventListener("click",function () {
+          let entrada = resultado.value;
+          let resultadoFinal;
             resultadoFinal = eval(entrada);
-          $("#resultado").val(resultadoFinal);
-        } catch (error) {
-          $("#resultado").val('Error');
-        }
-      });
+           resultado.value = resultadoFinal;
+        
+        });
 
-      $("#limpiar").click(function () {
-        $("#resultado").val('');
-        igual.prop("disabled", true);
+       botonLimpiar.addEventListener("click",function () {
+          resultado.value = "";
+          botonIgual.disabled = true;
+        });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
