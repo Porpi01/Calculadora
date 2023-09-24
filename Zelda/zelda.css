@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+    background-image: url('back.jpeg');
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    margin-left: -8px;
+    padding: 8px;
+    
+}
+
+#titulo {
+    width:100dvw;
+    height: 15dvh; 
+    background-color: rgba(92, 90, 90, 0.26);
+    font-size: 3dvh;
+    line-height: 15dvh;
+    text-align: center;
+    margin-top: -60px;
+    
+   
+}
+
+#container {
+    display: flex;
+    justify-content: space-between; 
+    margin: 135px;
+   
+}
+
+#Link, #Bokoblin, #Princesa {
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    background-color: rgba(92, 90, 90, 0.26);
+    border-radius: 10px;
+    text-align: center;
+    width: 10dvh;
+    height: 20dvh; 
+    padding: 50px;
+   
+}
+
+
+#footer {
+    width:100dvw;
+    height: 15dvh; 
+    background-color: rgba(92, 90, 90, 0.26);
+    font-size: 5dvh;
+    line-height: 15dvh;
+    text-align: right;
+    position: fixed;
+    bottom: 0;
+}
