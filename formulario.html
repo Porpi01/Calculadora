@@ -11,6 +11,10 @@
         body {
             padding-top: 30px;
         }
+
+        .btn {
+          margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -20,65 +24,67 @@
                 <!-- FORM ============ -->
                 <form name="userForm" ng-submit="submitForm()" novalidate>
                     <!-- PHONE -->
-                    <div  class="form-group" ng-class="{ 'has-error' : userForm.phone.$invalid && !userForm.phone.$pristine }">
+                    <div class="form-group" ng-class="{ 'has-error': userForm.phone.$invalid && !userForm.phone.$pristine, 'has-success': userForm.phone.$valid && !userForm.phone.$pristine }">
                         <label>Telefono</label>
-                        <input type="text" name="phone" class="form-control" ng-model="user.phone" ng-pattern="/^[0-9]*$/" ng-minlength="1" ng-maxlength="5" required ng-class="{ 'is-invalid' : userForm.phone.$invalid && !userForm.phone.$pristine  }">
+                        <input type="text" name="phone" class="form-control" ng-model="user.phone" ng-pattern="/^[0-9]*$/" ng-minlength="1" ng-maxlength="5" required ng-class="{ 'is-invalid': userForm.phone.$invalid && !userForm.phone.$pristine, 'is-valid': userForm.phone.$valid && !userForm.phone.$pristine }">
                         <p ng-show="userForm.phone.$error.required && !userForm.phone.$pristine" class="help-block">El telefono es requerido.</p>
-                        <p ng-show="userForm.phone.$error.pattern" class="help-block">Introduce solo numeros no letras</p>
-                        <p ng-show="userForm.phone.$error.minlength" class="help-block">El telefono es muy corto</p>
+                        <p ng-show="userForm.phone.$error.pattern" class="help-block">Introduce solo números, no letras.</p>
+                        <p ng-show="userForm.phone.$error.minlength" class="help-block">El telefono es muy corto.</p>
                         <p ng-show="userForm.phone.$error.maxlength" class="help-block">El telefono es muy largo.</p>
                     </div>
 
                     <!-- DNI -->
-                    <div class="form-group" ng-class="{ 'has-error' : userForm.dni.$invalid && !userForm.dni.$pristine }">
+                    <div class="form-group" ng-class="{ 'has-error': userForm.dni.$invalid && !userForm.dni.$pristine, 'has-success': userForm.dni.$valid && !userForm.dni.$pristine }">
                         <label>DNI</label>
-                        <input type="text" name="dni" class="form-control" ng-model="user.dni" ng-pattern="/^[0-9]{4,10}[A-Za-z]$/" ng-minlength="5" ng-maxlength="10" required ng-class="{ 'is-invalid' : userForm.dni.$invalid && !userForm.dni.$pristine }">
-                        <p ng-show="userForm.dni.$error.required && !userForm.dni.$pristine" class="help-block">El DNI es requerido</p>
-                        <p ng-show="userForm.dni.$error.pattern" class="help-block">Introduce 9 digitos y una letra</p>
-                        <p ng-show="userForm.dni.$error.minlength" class="help-block">El DNI es muy corto</p>
+                        <input type="text" name="dni" class="form-control" ng-model="user.dni" ng-pattern="/^[0-9]{4,9}[A-Z]$/" ng-minlength="5" ng-maxlength="10" required ng-class="{ 'is-invalid': userForm.dni.$invalid && !userForm.dni.$pristine, 'is-valid': userForm.dni.$valid && !userForm.dni.$pristine }">
+                        <p ng-show="userForm.dni.$error.required && !userForm.dni.$pristine" class="help-block">El DNI es requerido.</p>
+                        <p ng-show="userForm.dni.$error.pattern" class="help-block">Introduce 9 dígitos y una letra.</p>
+                        <p ng-show="userForm.dni.$error.minlength" class="help-block">El DNI es muy corto.</p>
                         <p ng-show="userForm.dni.$error.maxlength" class="help-block">El DNI es muy largo.</p>
                     </div>
 
                     <!-- EMAIL -->
-                    <div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine }">
+                    <div class="form-group" ng-class="{ 'has-error': userForm.email.$invalid && !userForm.email.$pristine, 'has-success': userForm.email.$valid && !userForm.email.$pristine }">
                         <label>Email</label>
-                        <input type="email" name="email" class="form-control" ng-model="user.email" ng-minlength="10" ng-maxlength="15" ng-class="{ 'is-invalid' : userForm.email.$invalid && !userForm.email.$pristine }" >
-                    
-                        <p ng-show="userForm.email.$error.email" class="help-block">Introduce un email valido.</p>
+                        <input type="email" name="email" class="form-control" ng-model="user.email" ng-minlength="10" ng-maxlength="15" ng-class="{ 'is-invalid': userForm.email.$invalid && !userForm.email.$pristine, 'is-valid': userForm.email.$valid && !userForm.email.$pristine }">
+                        <p ng-show="userForm.email.$error.email" class="help-block">Introduce un email válido.</p>
                         <p ng-show="userForm.email.$error.minlength" class="help-block">El email es muy corto.</p>
                         <p ng-show="userForm.email.$error.maxlength" class="help-block">El email es muy largo.</p>
                     </div>
-
+                  
+                    <button type="reset" class="btn btn-danger"ng-disabled="!userForm.$dirty" ng-click="resetForm()" >Reset</button>
                     <button type="submit" class="btn btn-primary" ng-disabled="userForm.$invalid">Submit</button>
-                    <button type="reset" class="btn btn-danger" ng-disabled="$scope.user.phone || $scope.user.dni || $scope.user.email" ng-class="{ 'is-valid' }">Reset</button>
                 </form>
             </div>
         </div>
     </div>
 
     <script>
-        // Create angular app
         var validationApp = angular.module('validationApp', []);
 
         validationApp.controller('mainController', function ($scope) {
-            // Initialize user object
             $scope.user = {};
-
-            // Function to submit the form after all validation has occurred
             $scope.submitForm = function () {
-                // Check to make sure the form is completely valid
+                    
                 if ($scope.userForm.$valid) {
-                   
                     alert("Telefono: " + $scope.user.phone + "\nDNI: " + $scope.user.dni + "\nEmail: " + $scope.user.email);
                 }
             };
 
-            // Function to reset the form
             $scope.resetForm = function () {
                 $scope.user = {};
                 $scope.userForm.$setPristine();
                 $scope.userForm.$setUntouched();
+                $scope.user.phone = "";
+                $scope.user.dni = "";
+                $scope.user.email = "";
+                $scope.userForm.phone.$error = {};
+                $scope.userForm.dni.$error = {};
+                $scope.userForm.email.$error = {};
+
             };
+
+     
         });
     </script>
 </body>
