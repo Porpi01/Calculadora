@@ -1,0 +1,56 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif; 
+}
+.navbar {
+    background-color: #ff5722;
+}
+.container2,.container3 {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    max-width: 600px;
+    background-color: black;
+    color: #ff5722;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #ff5722;
+}
+
+.form-select, .form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Estilos para el botón de calcular */
+.btn-primary {
+    background-color: #ff5722;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #ff4500;
+}
+
+/* Estilos para el resultado */
+#resultado {
+    font-weight: bold;
+    font-size: 24px;
+    color: #ff5722;
+    margin-top: 20px;
+}

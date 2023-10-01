@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora SPA AJAX</title>
+    <!-- Añadir Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"
+        integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="matematicas.webp" alt="Logo" width="30" height="30" class="rounded-pill">
+                NumeroNerd
+            </a>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <button id="sesionBtnIniciar" class="btn btn-link nav-link">
+                        Iniciar Sesión
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button style="display: none;" id="sesionBtnCerrar" class="btn btn-link nav-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                            <path fill-rule="evenodd"
+                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                        </svg>
+                        Cerrar Sesión
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container2 mb-3 mt-3" id="loginContainer">
+        <div class="row">
+            <div class="col-12">
+                <div id="loginForm">
+                    <form>
+                        <h1>Login</h1>
+                        <div class="mb-3">
+                            <label for="login" class="form-label">Usuario:</label>
+                            <input type="text" class="form-control" id="login" placeholder="Introduce tu usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña:</label>
+                            <input type="password" class="form-control" id="password"
+                                placeholder="Introduce tu contraseña">
+                        </div>
+                        <button type="button" id="loginButton" class="btn btn-primary">Iniciar Sesión</button>
+                        <div id="controlErrores" class="mt-3"> </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container3 mt-3 mb-3" style="display: none;" id="calculadoraContainer">
+        <div class="row">
+            <div class="col-12">
+                <h1>Calculadora</h1>
+                <form id="form_calculadora">
+                    <div class="mb-3">
+                        <label for="op1" class="form-label">Operando 1:</label>
+                        <input type="text" class="form-control" id="op1" name="op1" placeholder="Introduce un número">
+                    </div>
+                    <div class="mb-3">
+                        <label for="op2" class="form-label">Operando 2:</label>
+                        <input type="text" class="form-control" id="op2" name="op2" placeholder="Introduce un número">
+                    </div>
+                    <div class="mb-3">
+                        <label for="operacion" class="form-label">Operación:</label>
+                        <select class="form-select" id="operacion" name="operacion">
+                            <option value="suma">Suma</option>
+                            <option value="resta">Resta</option>
+                            <option value="multiplicacion">Multiplicación</option>
+                            <option value="division">División</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="calcularButton" class="btn btn-primary">Calcular</button>
+                    <div id="resultado" class="mt-3">El resultado es: <span id="resultado-calculo"></span></div>
+                    <div id="errorCalculadora" class="mt-3"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function login() {
+            let login = document.getElementById("login");
+            let password = document.getElementById("password");
+
+            // Restablecer errores
+            document.getElementById("controlErrores").textContent = "";
+
+            if (login.value === "") {
+                document.getElementById("controlErrores").textContent = "El campo Usuario es obligatorio.";
+                return;
+            }
+
+            if (password.value === "") {
+                document.getElementById("controlErrores").textContent = "El campo Contraseña es obligatorio.";
+                return;
+            }
+
+            // Encriptar la contraseña utilizando CryptoJS
+            let encryptedPassword = CryptoJS.SHA256(password.value).toString();
+
+            let user = {
+                "username": login.value,
+                "password": encryptedPassword
+            }
+
+            fetch("http://localhost:8080/miniAPIcalc2/miServletCalculadora?op=login", {
+                method: 'POST',
+                body: JSON.stringify(user),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            }).then(function (response) {
+                if (response.status == 200) {
+
+                    document.getElementById("loginContainer").style.display = "none";
+                    document.getElementById("calculadoraContainer").style.display = "block";
+                    document.getElementById("sesionBtnCerrar").style.display = "block";
+                    document.getElementById("sesionBtnIniciar").style.display = "none";
+                } else {
+                    // Mostrar mensaje de error en caso de inicio de sesión fallido
+                    document.getElementById("controlErrores").textContent = "Credenciales incorrectas. Por favor, inténtelo de nuevo.";
+                    throw "KO";
+                }
+            }).then(function (data) {
+                console.log("OK logueado", data);
+            }).catch(function (error) {
+                console.log("KO no logueado", error);
+            });
+        }
+        // Función para realizar el cálculo
+        function calcular() {
+            let op1 = document.getElementById("op1");
+            let op2 = document.getElementById("op2");
+            let operacion = document.getElementById("operacion");
+
+            // Validar campos
+            if (op1.value === "") {
+                errorCalculadora.textContent = "El campo Operando 1 es obligatorio.";
+                return;
+            }
+
+            if (op2.value === "") {
+                errorCalculadora.textContent = "El campo Operando 2 es obligatorio.";
+                return;
+            }
+
+            // Validar que los campos contengan números
+            if (isNaN(op1.value)) {
+                errorCalculadora.textContent = "El Operando 1 debe ser un número válido.";
+                return;
+            }
+
+            if (isNaN(op2.value)) {
+                errorCalculadora.textContent = "El Operando 2 debe ser un número válido.";
+                return;
+            }
+
+            errorCalculadora.textContent = "";
+
+            document.getElementById("resultado-calculo").innerHTML = "";
+
+            let calculator = {
+                "operando1": op1.value,
+                "operando2": op2.value,
+                "operador": operacion.value
+            }
+
+            fetch("http://localhost:8080/miniAPIcalc2/miServletCalculadora?op=calcula", {
+                method: 'POST',
+                body: JSON.stringify(calculator),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                switch (data.operador) {
+                    case "suma":
+                        document.getElementById("resultado-calculo").innerHTML = data.operando1 + "+" + data.operando2 + "=" + data.resultado;
+                        break;
+                    case "resta":
+                        document.getElementById("resultado-calculo").innerHTML = data.operando1 + "-" + data.operando2 + "=" + data.resultado;
+                        break;
+                    case "division":
+                        if (data.operando2 != 0) {
+                            document.getElementById("resultado-calculo").innerHTML = data.operando1 + "/" + data.operando2 + "=" + data.resultado;
+                        } else {
+                            document.getElementById("resultado-calculo").innerHTML = "No se puede dividir entre 0.";
+                        }
+                        break;
+                    case "multiplicacion":
+                        document.getElementById("resultado-calculo").innerHTML = data.operando1 + "*" + data.operando2 + "=" + data.resultado;
+                        break;
+                    default:
+                        document.getElementById("resultado-calculo").innerHTML = "No se han introducido operandos válidos.";
+                }
+
+                console.log(data);
+            }).catch(function (error) {
+                console.log(error);
+            })
+        }
+
+        window.addEventListener('load', function () {
+            // Cuando el usuario hace clic en el botón de inicio de sesión, llamar a la función de inicio de sesión
+            document.getElementById("loginButton").addEventListener("click", function () {
+
+                login();
+                document.getElementById("op1").value = "";
+            document.getElementById("op2").value = "";
+            document.getElementById("resultado-calculo").value = "";
+
+            });
+
+            // Cuando el usuario hace clic en el botón de calcular, llamar a la función de calcular
+            document.getElementById("calcularButton").addEventListener("click", function (e) {
+                e.preventDefault();
+                calcular();
+                document.getElementById("errorCalculadora").value = "";
+            });
+        })
+
+        document.getElementById("sesionBtnCerrar").addEventListener("click", function () {
+
+            document.getElementById("calculadoraContainer").style.display = "none";
+            document.getElementById("loginContainer").style.display = "block";
+            document.getElementById("sesionBtnCerrar").style.display = "none";
+            document.getElementById("sesionBtnIniciar").style.display = "block";
+            document.getElementById("login").value = "";
+            document.getElementById("password").value = "";
+
+
+        });
+
+    </script>
+</body>
+
+</html>
