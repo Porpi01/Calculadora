@@ -42,7 +42,6 @@
         </div>
     </nav>
 
-
     <div class="container2 mb-3 mt-3" id="loginContainer">
         <div class="row">
             <div class="col-12">
@@ -96,7 +95,39 @@
             </div>
         </div>
     </div>
+
     <script>
+        function check() {
+            let login = document.getElementById("login");
+            let password = document.getElementById("password");
+
+            fetch("http://localhost:8081/miniAPIcalc2/miServletCalculadora?op=check", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            })
+            .then(function (response) {
+                if (response.status == 200) {
+                    // La sesión está iniciada, mostrar la calculadora
+                    document.getElementById("loginContainer").style.display = "none";
+                    document.getElementById("calculadoraContainer").style.display = "block";
+                    document.getElementById("sesionBtnCerrar").style.display = "block";
+                    document.getElementById("sesionBtnIniciar").style.display = "none";
+                } else {
+                    // La sesión no está iniciada, mostrar el formulario de inicio de sesión
+                    document.getElementById("loginContainer").style.display = "block";
+                    document.getElementById("calculadoraContainer").style.display = "none";
+                    document.getElementById("sesionBtnCerrar").style.display = "none";
+                    document.getElementById("sesionBtnIniciar").style.display = "block";
+                }
+            })
+            .catch(function (error) {
+                console.log("Error al verificar la sesión:", error);
+            });
+        }
+
         function login() {
             let login = document.getElementById("login");
             let password = document.getElementById("password");
@@ -122,7 +153,7 @@
                 "password": encryptedPassword
             }
 
-            fetch("http://localhost:8080/miniAPIcalc2/miServletCalculadora?op=login", {
+            fetch("http://localhost:8081/miniAPIcalc2/miServletCalculadora?op=login", {
                 method: 'POST',
                 body: JSON.stringify(user),
                 headers: {
@@ -131,7 +162,6 @@
                 credentials: 'include'
             }).then(function (response) {
                 if (response.status == 200) {
-
                     document.getElementById("loginContainer").style.display = "none";
                     document.getElementById("calculadoraContainer").style.display = "block";
                     document.getElementById("sesionBtnCerrar").style.display = "block";
@@ -147,6 +177,7 @@
                 console.log("KO no logueado", error);
             });
         }
+
         // Función para realizar el cálculo
         function calcular() {
             let op1 = document.getElementById("op1");
@@ -185,7 +216,7 @@
                 "operador": operacion.value
             }
 
-            fetch("http://localhost:8080/miniAPIcalc2/miServletCalculadora?op=calcula", {
+            fetch("http://localhost:8081/miniAPIcalc2/miServletCalculadora?op=calcula", {
                 method: 'POST',
                 body: JSON.stringify(calculator),
                 headers: {
@@ -224,12 +255,10 @@
 
         window.addEventListener('load', function () {
             // Cuando el usuario hace clic en el botón de inicio de sesión, llamar a la función de inicio de sesión
+            check()
             document.getElementById("loginButton").addEventListener("click", function () {
 
                 login();
-                document.getElementById("op1").value = "";
-            document.getElementById("op2").value = "";
-            document.getElementById("resultado-calculo").value = "";
 
             });
 
@@ -237,31 +266,48 @@
             document.getElementById("calcularButton").addEventListener("click", function (e) {
                 e.preventDefault();
                 calcular();
-                document.getElementById("errorCalculadora").value = "";
             });
-        })
+
+            // Cuando el usuario hace clic en el botón de limpiar, llamar a la función de limpiar
+            document.getElementById("limpiarButton").addEventListener("click", function () {
+                limpiar();
+            });
+        });
 
         document.getElementById("sesionBtnCerrar").addEventListener("click", function () {
-
-            document.getElementById("calculadoraContainer").style.display = "none";
-            document.getElementById("loginContainer").style.display = "block";
-            document.getElementById("sesionBtnCerrar").style.display = "none";
-            document.getElementById("sesionBtnIniciar").style.display = "block";
-            document.getElementById("login").value = "";
-            document.getElementById("password").value = "";
-
-
+            // Realiza una solicitud para cerrar la sesión en el servidor
+            fetch("http://localhost:8081/miniAPIcalc2/miServletCalculadora?op=logout", {
+                method: 'POST', // Utiliza el método y la URL adecuados para tu aplicación
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            })
+            .then(function (response) {
+                if (response.status == 200) {
+                    // La sesión se cerró correctamente en el servidor
+                    // Redirige al usuario al formulario de inicio de sesión
+                    document.getElementById("loginContainer").style.display = "block";
+                    document.getElementById("calculadoraContainer").style.display = "none";
+                    document.getElementById("sesionBtnCerrar").style.display = "none";
+                    document.getElementById("sesionBtnIniciar").style.display = "block";
+                    document.getElementById("login").value = "";
+                    document.getElementById("password").value = "";
+                } else {
+                    // Maneja el caso en el que el servidor no pudo cerrar la sesión
+                    console.log("Error al cerrar la sesión en el servidor");
+                }
+            })
+            .catch(function (error) {
+                console.log("Error al cerrar la sesión:", error);
+            });
         });
+
         function limpiar() {
             document.getElementById("op1").value = "";
             document.getElementById("op2").value = "";
             document.getElementById("operacion").value = "suma";
-          
-         
         }
-        document.getElementById("limpiarButton").addEventListener("click", function () {
-            limpiar();
-        });
 
     </script>
 </body>
