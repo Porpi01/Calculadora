@@ -1,0 +1,46 @@
+<div *ngIf="status!=null">
+  <div class="d-flex justify-content-center my-3">
+    <div class="alert alert-danger" role="alert">
+      ERROR: {{status!.message}}
+    </div>
+  </div>
+</div>
+
+<div *ngIf="status==null">
+  <div class="d-flex justify-content-end mb-3">
+    <h6>Showing {{oPage.numberOfElements}} of total {{oPage.totalElements}} replies.</h6>
+  </div>
+
+  <div class="card flex justify-content-center">
+    <p-paginator (onPageChange)="onPageChang($event)" [first]="oPaginatorState.first!" [rows]="oPaginatorState.rows!"
+      [totalRecords]="oPage.totalElements" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+  </div>
+
+  <div class="card">
+    <p-table [value]="oPage.content" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th>ID</th>
+          <th (click)="doOrder('title')">Title</th>
+          <th (click)="doOrder('body')">Body</th>
+          <th (click)="doOrder('id_user')">id_user</th>
+          <th (click)="doOrder('id_thread')">id_thread</th>
+       
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-r>
+        <tr>
+          <td>{{r.id}}</td>
+          <td>{{r.title}}</td>
+          <td>{{r.body}}</td>
+          <td> <ng-container *ngIf="r.user">
+            <a [routerLink]="['/admin','user','view',r.user.id]">{{r.user.name}} {{r.user.surname}}</a>
+          </ng-container></td>
+          <td><ng-container *ngIf="r.thread"><a [routerLink]="['/admin','thread','view',r.thread.id]">{{r.thread.title}}</a>
+          </ng-container>  </td>
+          
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<div *ngIf="status!=null">
+  <div class="d-flex justify-content-center my-3">
+    <div class="alert alert-danger" role="alert">
+      ERROR: {{status!.message}}
+    </div>
+  </div>
+</div>
+
+<div *ngIf="status==null">
+  <div class="d-flex justify-content-end mb-3">
+    <h6>Showing {{oPage.numberOfElements}} of total {{oPage.totalElements}} users.</h6>
+  </div>
+  <div class="flex justify-content-center mb-3">
+    <p-paginator (onPageChange)="onPageChang($event)" [first]="oPaginatorState.first!" [rows]="oPaginatorState.rows!"
+      [totalRecords]="oPage.totalElements" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+  </div>
+
+  <div class="flex justify-content-center mb-3">
+    <p-table [value]="oPage.content" styleClass="p-datatable-striped p-datatable-sm">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th>ID</th>
+          <th (click)="doOrder('name')">Name</th>
+          <th (click)="doOrder('surname')">Surname</th>
+          <th (click)="doOrder('lastname')">Last name</th>
+          <th (click)="doOrder('email')">Email</th>
+          <th (click)="doOrder('username')">Username</th>
+          <th (click)="doOrder('role')">Role</th>
+          <th>Tools</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-u>
+        <tr>
+          <td>{{u.id}}</td>
+          <td>{{u.name}}</td>
+          <td>{{u.surname}}</td>
+          <td>{{u.lastname}}</td>
+          <td>{{u.email}}</td>
+          <td>{{u.username}}</td>
+          <td>
+            <span *ngIf="u.role==true">Admin</span>
+            <span *ngIf="u.role==false">User</span>
+          </td>
+          <td>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+              <button class="btn btn-primary" [routerLink]="['/admin','user','view',u.id]"><i
+                  class="pi pi-eye"></i></button>
+              <button class="btn btn-primary" (click)="goToView(u)"><i class="pi pi-arrow-circle-up"></i></button>
+              <button class="btn btn-warning" [routerLink]="['/admin','user','edit',u.id]"><i
+                  class="pi pi-pencil"></i></button>
+                  <button class="btn btn-danger" (click)="confirmDelete(u)"><i class="pi pi-trash"></i></button>
+                 
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p-dialog header="Confirm Deletion" [style]="{ width: '50vw' }" [(visible)]="displayDialog">
+      <p>
+        You are about to permanently delete the user with the following details:
+        <ul>
+          <li><strong>ID:</strong> {{ userToDelete?.id }}</li>
+          <li><strong>Name:</strong> {{ userToDelete?.name }}</li>
+            <li><strong>Surname:</strong> {{ userToDelete?.surname }}</li>
+          <li><strong>Lastname:</strong> {{ userToDelete?.lastname }}</li>
+        
+          <li><strong>Email:</strong> {{ userToDelete?.email }}</li>
+          <li><strong>Username:</strong> {{ userToDelete?.username }}</li>
+          <li><strong>Role:</strong> {{ userToDelete?.role }}</li>
+        </ul>
+        This action is irreversible and will remove all user data. Are you absolutely sure you want to proceed with the deletion?
+   
+  
+      <p-footer>
+        <button class="btn btn-primary" pButton icon="pi pi-check" (click)="deleteUser()" label="Yes"></button>
+        <button class="btn btn-danger" pButton icon="pi pi-times" (click)="displayDialog = false" label="No"></button>
+      </p-footer>
+    </p-dialog>
